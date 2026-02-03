@@ -533,6 +533,12 @@ class BERT_CRF_NER(nn.Module):
     def _forward_alg(self, feats):
         '''
         this also called alpha-recursion or forward recursion, to calculate log_prob of all barX
+        
+        Summary of Variables (all the variables are log-probability)
+        Variable            Logic
+        feats	            Emission Score: The model's raw opinion of "Is word X a Noun?"
+        self.transitions	Transition Score: The learned grammar rules (e.g., "Adjective follows Noun").
+        log_alpha	        Path Score: The accumulated score of all possible paths up to now.
         '''
 
         # T = self.max_seq_length
