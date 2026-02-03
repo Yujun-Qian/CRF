@@ -540,6 +540,8 @@ class BERT_CRF_NER(nn.Module):
         batch_size = feats.shape[0]
 
         # alpha_recursion,forward, alpha(zt)=p(zt,bar_x_1:t)
+        # The variable log_alpha represents αt(j), which is the log-probability 
+        # of the sequence ending at time step t with tag j, summing over all possible previous paths
         log_alpha = torch.Tensor(batch_size, 1, self.num_labels).fill_(-10000.).to(self.device)
         # normal_alpha_0 : alpha[0]=Ot[0]*self.PIs
         # self.start_label has all of the score. it is log,0 is p=1
