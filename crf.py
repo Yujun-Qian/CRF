@@ -565,6 +565,30 @@ class BERT_CRF_NER(nn.Module):
     def _get_bert_features(self, input_ids, segment_ids, input_mask):
         '''
         sentances -> word embedding -> lstm -> MLP -> feats
+
+        feats.shape = (batch_size, T, num_labels)
+        
+        Dimension	Meaning	Description
+        batch_size	Batch	Number of sentences processed together
+        T	Sequence length	Number of words/tokens in each sentence
+        num_labels	Tag set size	Number of possible tags (NER, POS, etc.)
+
+        Visual Representation
+
+                          num_labels (e.g., 5 tags)
+                         ┌──────────────────────┐
+                         │  O   B-PER  I-PER ...│
+                    ┌────┼──────────────────────┤
+                    │ w1 │ 0.2   0.8   0.1  ... │
+         T          │ w2 │ 0.5   0.3   0.9  ... │
+    (seq_length)    │ w3 │ 0.1   0.6   0.2  ... │
+                    │... │ ...   ...   ...  ... │
+                    └────┴──────────────────────┘
+                    
+                    ─────── One sentence ───────
+                    
+         └──────────────────────────────────────┘
+                    × batch_size sentences
         '''
         #bert_seq_out, _ = self.bert(input_ids, token_type_ids=segment_ids, attention_mask=input_mask, output_all_encoded_layers=False)
         o = self.bert(input_ids, token_type_ids=segment_ids, attention_mask=input_mask)
